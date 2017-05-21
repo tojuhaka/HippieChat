@@ -1,9 +1,12 @@
 package tojuhaka.hippiechat;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAdd;
     private DatabaseAccess databaseAccess;
     private List<Message> messages;
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +49,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Message message = messages.get(position);
-                TextView txtText = (TextView) view.findViewById(R.id.txtText);
-                if (message.isFullDisplayed()) {
-                    txtText.setText(message.getShortText());
-                    message.setFullDisplayed(false);
-                } else {
-                    txtText.setText(message.getText());
-                    message.setFullDisplayed(true);
-                }
+
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+
+                dialogBuilder.setTitle(message.getTarget());
+                dialogBuilder.setMessage(message.getText());
+ 
+                dialogBuilder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // here you can add functions
+                    }
+                });
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // here you can add functions
+                        dialog.cancel();
+                    }
+                });
+
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
             }
         });
+
     }
 
     @Override
@@ -103,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
             ImageView btnDelete = (ImageView) convertView.findViewById(R.id.btnDelete);
             TextView txtTarget = (TextView) convertView.findViewById(R.id.txtTarget);
             TextView txtText = (TextView) convertView.findViewById(R.id.txtText);
+
+            Button btnSend = (Button) convertView.findViewById(R.id.btnSend);
+            btnSend.setVisibility(View.GONE);
 
             final Message message = messages.get(position);
             message.setFullDisplayed(false);

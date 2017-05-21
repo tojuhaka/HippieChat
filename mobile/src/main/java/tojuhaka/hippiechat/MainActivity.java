@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -16,9 +18,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 
 import tojuhaka.hippiechatutils.Message;
+import tojuhaka.hippiechatutils.Sender;
 import tojuhaka.hippiechatutils.tojuhaka.hippiechatutils.db.DatabaseAccess;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Message> messages;
     final Context context = this;
 
+    public void sendMessage() {
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,17 +57,24 @@ public class MainActivity extends AppCompatActivity {
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Message message = messages.get(position);
+                final Message message = messages.get(position);
 
 
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 
-                dialogBuilder.setTitle(message.getTarget());
+                dialogBuilder.setTitle("Publish message to " + message.getTarget() + "?");
                 dialogBuilder.setMessage(message.getText());
- 
+
                 dialogBuilder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+
                     public void onClick(DialogInterface dialog, int which) {
-                        // here you can add functions
+                        try {
+                            Sender.sendMessage(context, message);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

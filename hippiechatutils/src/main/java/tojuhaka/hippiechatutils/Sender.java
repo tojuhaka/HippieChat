@@ -21,7 +21,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 
 public class Sender {
-    private static final String BASE_URL = "https://hipchat.qvantel.com/v2/room/testing_room/message";
+    private static final String BASE_URL = "https://hipchat.domain.com/v2/room/testing_room/message";
     private static final String token = "<token here>";
 
     public static void sendMessage(Context context, Message message) throws IOException, JSONException {
